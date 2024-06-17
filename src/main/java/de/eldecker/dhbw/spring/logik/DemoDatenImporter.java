@@ -4,6 +4,7 @@ import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.ROT;
 import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.ORANGE;
 import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.WEISS;
 import static de.eldecker.dhbw.spring.model.KfzMarkeEnum.BMW;
+import static de.eldecker.dhbw.spring.model.KfzMarkeEnum.MERCEDES;
 import static de.eldecker.dhbw.spring.model.KfzMarkeEnum.VW;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class DemoDatenImporter implements ApplicationRunner {
             
             FahrzeugHalterEntity halter1 = new FahrzeugHalterEntity("Herr", "Max", "Mustermann", "Kronenplatz 1", 76676, "Karlsruhe" );
             FahrzeugHalterEntity halter2 = new FahrzeugHalterEntity("Frau", "Pia", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  );
+            FahrzeugHalterEntity halter3 = new FahrzeugHalterEntity("Frau", "Eva", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  ); // Schwester von halter2
             
             List<KfzKennzeichenEntity> kfzKennzeichenList = new ArrayList<>( 10 );
             
@@ -69,7 +71,12 @@ public class DemoDatenImporter implements ApplicationRunner {
             fahrzeugDaten = new FahrzeugDatenEntity( BMW, WEISS, "5UMBT935X6DFAE9BU", 1975 );            
             kennzeichen   = new KfzKennzeichenEntity( "MA AB 123H", fahrzeugDaten, halter2 );
             kfzKennzeichenList.add( kennzeichen );
-            
+
+            // Kennzeichen 4
+            fahrzeugDaten = new FahrzeugDatenEntity( MERCEDES, WEISS, "WDCYR49E636ATTZ9R", 2011 );            
+            kennzeichen   = new KfzKennzeichenEntity( "MA X 777", fahrzeugDaten, halter3 );
+            kfzKennzeichenList.add( kennzeichen );
+
             _kfzKennzeichenRepo.saveAll( kfzKennzeichenList );
             
             
