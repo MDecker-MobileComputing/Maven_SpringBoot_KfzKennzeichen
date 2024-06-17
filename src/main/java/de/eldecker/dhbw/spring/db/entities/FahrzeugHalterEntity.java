@@ -5,6 +5,8 @@ import static jakarta.persistence.GenerationType.AUTO;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.eldecker.dhbw.spring.db.krypto.StringAttributVerschluessler;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -31,16 +33,22 @@ public class FahrzeugHalterEntity {
     @GeneratedValue( strategy = AUTO )
     private Long id;
 
-    /** Anrede, z.B. "Herr" oder "Frau Dr." */
+    /** Anrede, z.B. "Herr" oder "Frau Dr."; wird nicht verschlüsselt. */
     private String anrede;
 
-    /** Vorname, z.B. "Herbert" */
+    /** Vorname, z.B. "Herbert"; wird verschlüsselt. */
+    @Convert( converter = StringAttributVerschluessler.class )
     private String vorname;
 
-    /** Vorname, z.B. "Müller-Lüdenscheidt" */
+    /** Vorname, z.B. "Müller-Lüdenscheidt"; wird verschlüsselt. */
+    @Convert( converter = StringAttributVerschluessler.class )
     private String nachname;
 
-    /** Anschrift mit Hausnummer (in Deutschland), z.B. "Hauptstraße 23B" */
+    /** 
+     * Anschrift mit Hausnummer (in Deutschland), z.B. "Hauptstraße 23B";
+     * wird verschlüsselt. 
+     */
+    @Convert( converter = StringAttributVerschluessler.class )
     private String anschrift;
 
     /**
