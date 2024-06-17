@@ -28,6 +28,7 @@ public class DemoDatenImporter implements ApplicationRunner {
 
     private final static Logger LOG = LoggerFactory.getLogger( DemoDatenImporter.class );
     
+    /** Repo-Bean für Zugriff auf Datenbanktabelle mit KFZ-Kennzeichen. */
     @Autowired
     private KfzKennzeichenRepo _kfzKennzeichenRepo;
     

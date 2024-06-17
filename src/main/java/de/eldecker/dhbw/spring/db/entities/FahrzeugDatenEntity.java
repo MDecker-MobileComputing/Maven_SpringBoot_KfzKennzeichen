@@ -20,7 +20,10 @@ import jakarta.validation.constraints.Min;
 
 
 /**
- * Entity mit Daten zu einem KFZ.
+ * Entity mit Daten zu einem Fahrzeug. Einem KFZ-Kennzeichen ist immer genau ein Objekt
+ * dieser Klasse zugeordnet. Es kann aber sein, dass ein Objekt dieser Klasse noch kein
+ * KFZ-Kennzeichen hat (z.B. Auto, das noch nicht zugelassen ist, weil es noch beim
+ * Händler steht).
  */
 @Entity
 @Table( name = "FAHRZEUG_DATEN" )
@@ -49,9 +52,9 @@ public class FahrzeugDatenEntity {
      * <br><br>
      *
      * Wegen {@code Enumerated( STRING )} werden die Enum-Elemente nicht auf Index-Werte
-     * abgebildet, sondern auf Strings; dadurch ergibt sich kein Problem, wenn in 
+     * abgebildet, sondern auf Strings; dadurch ergibt sich kein Problem, wenn in
      * {@link KfzMarkeEnum} weitere Enum-Elemente hinzukommen, z.B. weil neue Auto-Marken
-     * erscheinen (z.B. für E-Autos). Bei Verwendung von H2 als Datenbank wird für dieses 
+     * erscheinen (z.B. für E-Autos). Bei Verwendung von H2 als Datenbank wird für dieses
      * Attribut eine Spalte vom Typ {@code ENUM} angelegt.
      */
     @Enumerated( STRING )
@@ -72,18 +75,18 @@ public class FahrzeugDatenEntity {
     /**
      * Baujahrs (nicht Zulassungsjahr) des Fahrzeugs.
      * <br><br>
-     * 
-     * Erstes Auto von Karl Benz wurde 1885 gebaut (und fuhr 1886), deshalb 
+     *
+     * Erstes Auto von Karl Benz wurde 1885 gebaut (und fuhr 1886), deshalb
      * wird mit der Annotation {@code Min} festgelegt, dass die Jahreszahl
      * nicht vor 1885 sein darf.
      * <br><br>
-     * 
-     * Mit dem <i>Custom Bean Validator</i> {@code JahrNichtInZukunft} wird 
-     * sichergestellt, dass kein Jahr in der Zukunft gesetzt wird. 
+     *
+     * Mit dem <i>Custom Bean Validator</i> {@code JahrNichtInZukunft} wird
+     * sichergestellt, dass kein Jahr in der Zukunft gesetzt wird.
      */
-    @Min( value = 1885, 
+    @Min( value = 1885,
           message = "Vor 1885 wurden keine Autos gebaut" )
-    @JahrNichtInZukunft( message = "Das Baujahr des Fahrzeugs liegt in der Zukunft" )    
+    @JahrNichtInZukunft( message = "Das Baujahr des Fahrzeugs liegt in der Zukunft" )
     private int baujahr;
 
 
