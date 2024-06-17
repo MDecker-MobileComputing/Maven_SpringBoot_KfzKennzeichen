@@ -5,14 +5,12 @@ import static javax.crypto.Cipher.DECRYPT_MODE;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 
 import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
-import java.security.InvalidKeyException;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
@@ -31,8 +29,15 @@ public class AesHelfer {
 
     private final static Logger LOG = LoggerFactory.getLogger( AesHelfer.class );
     
-    /** Genauer Bezeichner Verschlüsselungsalgorithmus inkl. Block-Modus und Padding. */
-    private static final String KRYPTO_ALGO_NAME = "AES/CBC/PKCS5Padding"; 
+    /** 
+     * Genauer Bezeichner Verschlüsselungsalgorithmus:
+     * <ul>
+     * <li>AES: Symmetrischer Verschlüsselungsalgorithmus, Block-Chiffre</li>
+     * <li>ECB: Blockmodus</li>
+     * <li>PKCS5Padding: Algo für Füll-Bytes, um Block bei Bedarf aufzufüllen.</li>
+     * </ul> 
+     */
+    private static final String KRYPTO_ALGO_NAME = "AES/ECB/PKCS5Padding"; 
     
     /**
      * Symmetrischer Schlüssel (128 Bit) als Hexadezimalziffer mit 32 Buchstaben,
@@ -44,14 +49,17 @@ public class AesHelfer {
     @Value( "${de.eldecker.kfz-kennzeichen.krypto.schluessel:}" )
     private String _schluesselHex;
     
-    /** Objekt für Ver-/Entschlüsselung. */
+    /** Objekt für Ver-/Entschlüsselung */
     private Cipher _aesCipher = null;
     
-    /** Symmetrischer Schlüssel */
+    /** Objekt mit symmetrischem Schlüssel */
     private SecretKeySpec _secretKey = null;
 
-    /** Objekt für die Umwandlung eines byte-Arrays nach String mit Base64. */
+    /** Objekt für die Umwandlung von byte[] nach String mit Base64-Kodierung */
     private Encoder _base64Encoder = Base64.getEncoder();
+    
+    /** Objekt für die (Rück-)Umwandlung von einem String nach byte[] mit Base64-Kodierung */
+    private Decoder _base64Decoder = Base64.getDecoder();
     
     
     /**
@@ -65,78 +73,90 @@ public class AesHelfer {
      * Das ist beabsichtigt, weil die Anwendung nicht sinnvoll funktionieren
      * kann wenn der Zugriff auf die verschlüsselten Datenbankspalten nicht
      * möglich ist.
+     * <br><br>
+     * 
+     * Es wird auch ein Test-String ver- und wieder entschlüsselt.
      * 
      * @throws NoSuchAlgorithmException Verschlüsselungsalgo nicht gefunden
      * 
-     * @throws NoSuchPaddingException Padding für Verschlüsselung nicht gefunden
-     * 
-     * @throws InvalidKeyException Fehler bei Testverschlüsselung: Kryptographischer 
-     *                             Schlüssel nicht in Ordnung
-     * 
-     * @throws BadPaddingException Fehler bei Testverschlüsselung: Invalide Füllbytes
-     *  
-     * @throws IllegalBlockSizeException Fehler bei Testverschlüsselung wegen falscher
+     * @throws GeneralSecurityException Fehler bei Ver- oder Entschlüsselung
      */
     @PostConstruct
-    public void initialisierung() 
-            throws NoSuchAlgorithmException, 
-                   NoSuchPaddingException, 
-                   InvalidKeyException, 
-                   IllegalBlockSizeException, 
-                   BadPaddingException {                     
+    public void initialisierung() throws NoSuchAlgorithmException, GeneralSecurityException {                                                
        
         if ( _schluesselHex.length() != 32 ) {
             
-            throw new KryptoRuntimeException( "Hex-Zahl mit Schlüssel hat falsche Länge." ); 
+            throw new GeneralSecurityException( "Hex-Zahl mit Schlüssel hat falsche Länge." ); 
         }
         
         _aesCipher = Cipher.getInstance( KRYPTO_ALGO_NAME );
         
-        final byte[] keyBytes = parseHexBinary( _schluesselHex );
-        
+        final byte[] keyBytes = parseHexBinary( _schluesselHex );        
         _secretKey = new SecretKeySpec( keyBytes, "AES" );
                 
-        // Testverschlüsselung
-        final String testString = "Lorem Ipsum";
-
-        final String testStringVerschluesselt = verschluesseln( testString );        
-        
-        LOG.info( "testString verschlüsselt: " + testStringVerschluesselt );
-        
-        final String testStringEntschluesselt = entschluesseln( testStringVerschluesselt );                        
-        if ( testString.equals( testStringEntschluesselt ) == false ) {
-         
-            throw new KryptoRuntimeException( 
-                    "Unerwarteter Ergebnis-String für Testverschlüsseln: " + testStringEntschluesselt 
-                   );
-        }
-        LOG.info( "Test-String erfolgreich entschlüsselt: " + testStringEntschluesselt );
+        testVerEntschluesselung(); // throws GeneralSecurityException
         
         LOG.info( "Verschlüsselungs-Algo initialisiert: " + _aesCipher );
     }
     
+    
+    /**
+     * Test: Verschlüsselt einen String und entschlüsselt ihn wieder.
+     * 
+     *  @throws GeneralSecurityException Fehler bei Ver- oder Entschlüsselung
+     */
+    private void testVerEntschluesselung() throws GeneralSecurityException { 
+            
+        final String testString = "Lorem Ipsum ?!*";
+
+        final String testStringVerschluesselt = verschluesseln( testString );                
+        LOG.info( "Test-String verschlüsselt: \"{}\"", testStringVerschluesselt );
         
-    public String verschluesseln( String stringKlartext ) 
-            throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        final String testStringEntschluesselt = entschluesseln( testStringVerschluesselt );
+        LOG.info( "Test-String entschlüsselt: \"{}\" ", testStringEntschluesselt );
         
-        LOG.info( "SecretKey für Verschlüsselung: " + _secretKey );
-        _aesCipher.init( ENCRYPT_MODE, _secretKey );
+        if ( testString.equals( testStringEntschluesselt ) == false ) {
+         
+            throw new GeneralSecurityException( "Test für Ver- und Entschlüsselung fehlgeschlagen" ); 
+        }        
+    }
+        
+    
+    /**
+     * Verschlüsselt {@code stringKlartext}.
+     * 
+     * @param stringKlartext Zu verschlüsselnder String
+     * 
+     * @return Chiffre in Base64-Kodierung
+     * 
+     * @throws GeneralSecurityException Fehler beim Verschlüsseln
+     */
+    public String verschluesseln( String stringKlartext ) throws GeneralSecurityException { 
+                    
+        _aesCipher.init( ENCRYPT_MODE, _secretKey ); // throws InvalidKeyException
         
         byte[] klartextBytes = stringKlartext.getBytes();
         
-        byte[] encryptedBytes = _aesCipher.doFinal( klartextBytes );
+        byte[] encryptedBytes = _aesCipher.doFinal( klartextBytes ); // throws IllegalBlockSizeException, BadPaddingException
                  
         return _base64Encoder.encodeToString( encryptedBytes );
     }
+
     
-    
-    public String entschluesseln( String stringVerschluesselt ) 
-            throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        
-        LOG.info( "SecretKey für Entschlüsselung: " + _secretKey );
+    /**
+     * Entschlüsselt {@code stringVerschluesselt}
+     * 
+     * @param stringVerschluesselt Base64-Kodierung von Chiffre
+     * 
+     * @return Entschlüsselter String
+     * 
+     * @throws GeneralSecurityException Fehler beim Entschlüsseln
+     */
+    public String entschluesseln( String stringVerschluesselt ) throws GeneralSecurityException { 
+                    
         _aesCipher.init( DECRYPT_MODE, _secretKey );
         
-        byte[] encryptedBytes = stringVerschluesselt.getBytes();
+        byte[] encryptedBytes = _base64Decoder.decode( stringVerschluesselt );
         
         byte[] decryptedBytes = _aesCipher.doFinal( encryptedBytes );
                         
