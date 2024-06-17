@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -30,8 +31,9 @@ public class KfzKennzeichenEntity {
     private Long id;
 
     /**
-     * KFZ-Kennzeichen, z.B. "KA X 1234".
+     * Deutsche KFZ-Kennzeichen, z.B. "KA X 1234".
      * <br><br>
+     * 
      * <b>Aufbau:</b>
      * <ul>
      * <li>Unterscheidungszeichen: 1-3 Großbuchstaben, z.B.
@@ -71,6 +73,14 @@ public class KfzKennzeichenEntity {
     @OneToOne( fetch = EAGER, cascade = PERSIST )
     @JoinColumn( name = "fahrzeug_daten_fk" )
     private FahrzeugDatenEntity fahrzeugDaten;
+    
+    /**
+     * Ein KFZ-Kennzeichen ist genau einem Fahrzeughalter zugeordnet (dieser kann aber
+     * weitere Fahrzeuge mit anderen KFZ-Kennzeichen besitzen).
+     */
+    @ManyToOne( fetch = EAGER, cascade = PERSIST ) 
+    @JoinColumn( name = "fahrzeug_halter_fk" )
+    private FahrzeugHalterEntity fahrzeugHalter;
 
 
     /**
@@ -82,10 +92,13 @@ public class KfzKennzeichenEntity {
     /**
      * Konstruktor, um alle Attribute zu setzen.
      */
-    public KfzKennzeichenEntity( String kennzeichen, FahrzeugDatenEntity fahrzeugdaten ) {
+    public KfzKennzeichenEntity( String kennzeichen, 
+                                 FahrzeugDatenEntity fahrzeugdaten,
+                                 FahrzeugHalterEntity fahrzeugHalter) {
 
-        this.kennzeichen   = kennzeichen;
-        this.fahrzeugDaten = fahrzeugdaten;
+        this.kennzeichen    = kennzeichen;
+        this.fahrzeugDaten  = fahrzeugdaten;
+        this.fahrzeugHalter = fahrzeugHalter;
     }
 
     public Long getId() {
@@ -112,6 +125,17 @@ public class KfzKennzeichenEntity {
 
         this.fahrzeugDaten = fahrzeugDaten;
     }
+        
+    public FahrzeugHalterEntity getFahrzeugHalter() {
+        
+        return fahrzeugHalter;
+    }
+
+    public void setFahrzeugHalter( FahrzeugHalterEntity fahrzeugHalter ) {
+        
+        this.fahrzeugHalter = fahrzeugHalter;
+    }
+
 
     public String toString() {
 
