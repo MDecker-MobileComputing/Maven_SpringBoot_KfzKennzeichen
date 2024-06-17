@@ -11,7 +11,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-
+/**
+ * Ein Objekt dieser Klasse repräsentiert genau ein KFZ-Kennzeichen und
+ * referenziert genau ein zugehöriges {@link FahrzeugDatenEntity}-Objekt
+ */
 @Entity
 @Table( name = "KFZ_KENNZEICHEN" )
 public class KfzKennzeichenEntity {
