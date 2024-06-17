@@ -8,6 +8,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 
 import de.eldecker.dhbw.spring.model.KfzFarbeEnum;
 import de.eldecker.dhbw.spring.model.KfzMarkeEnum;
+import de.eldecker.dhbw.spring.validatoren.JahrNichtInZukunft;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -69,9 +70,20 @@ public class FahrzeugDatenEntity {
     private String fin;
 
     /**
-      * Erstes Auto von Karl Benz wurde 1885 gebaut und fuhr 1886.
-      */
-    @Min( value = 1885, message = "Vor 1885 wurden keine Autos gebaut" )
+     * Baujahrs (nicht Zulassungsjahr) des Fahrzeugs.
+     * <br><br>
+     * 
+     * Erstes Auto von Karl Benz wurde 1885 gebaut (und fuhr 1886), deshalb 
+     * wird mit der Annotation {@code Min} festgelegt, dass die Jahreszahl
+     * nicht vor 1885 sein darf.
+     * <br><br>
+     * 
+     * Mit dem <i>Custom Bean Validator</i> {@code JahrNichtInZukunft} wird 
+     * sichergestellt, dass kein Jahr in der Zukunft gesetzt wird. 
+     */
+    @Min( value = 1885, 
+          message = "Vor 1885 wurden keine Autos gebaut" )
+    @JahrNichtInZukunft( message = "Das Baujahr des Fahrzeugs liegt in der Zukunft" )    
     private int baujahr;
 
 

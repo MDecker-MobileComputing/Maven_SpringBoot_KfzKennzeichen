@@ -11,6 +11,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import jakarta.validation.constraints.Pattern;
+
+
 /**
  * Ein Objekt dieser Klasse repräsentiert genau ein KFZ-Kennzeichen und
  * referenziert genau ein zugehöriges {@link FahrzeugDatenEntity}-Objekt
@@ -24,7 +27,25 @@ public class KfzKennzeichenEntity {
     @GeneratedValue( strategy = AUTO )
     private Long id;
 
-    /** KFZ-Kennzeichen, z.B. "KA X 1234" */
+    /**
+     * KFZ-Kennzeichen, z.B. "KA X 1234".
+     * <br><br>
+     * <b>Aufbau:</b>
+     * <ul>
+     * <li>Unterscheidungszeichen: 1-3 Großbuchstaben, z.B.
+     *     für Landkreis/Stadt, Behörde (z.B. "THW" für
+     *     technisches Hilfswerk) oder Militär 
+     *     ("Y" für Bundeswehr, "X" für  Nato)</li>
+     * <li>Erkennungsnummer: ein oder zwei Großbuchstaben,
+     *     dann Leerzeichen, dann 1-4 Ziffern.</li>
+     * <li>Optional: "H" für historische Fahrzeuge.</li>
+     * <ul><br><br>
+     *
+     * Das KFZ-Kennzeichen wird mit einem regulären Ausdruck geprüft
+     * (Bean Validation).
+     */
+    @Pattern( regexp = "[A-Z]{1,3} [A-Z]{1,2} [0-9]{1,4}(H)?",
+              message = "Ungültiges KFZ-Kennzeichen" )
     private String kennzeichen;
 
     /**
