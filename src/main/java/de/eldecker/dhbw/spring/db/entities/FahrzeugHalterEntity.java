@@ -33,8 +33,7 @@ public class FahrzeugHalterEntity {
     @GeneratedValue( strategy = AUTO )
     private Long id;
 
-    /** Anrede, z.B. "Herr" oder "Frau Dr."; wird verschlüsselt. */
-    @Convert( converter = StringAttributVerEntschluessler.class )
+    /** Anrede, z.B. "Herr" oder "Frau Dr."; wird nicht verschlüsselt. */
     private String anrede;
 
     /** Vorname, z.B. "Herbert"; wird verschlüsselt. */

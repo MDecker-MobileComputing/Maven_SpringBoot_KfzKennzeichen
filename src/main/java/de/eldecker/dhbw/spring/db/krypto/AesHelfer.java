@@ -9,6 +9,7 @@ import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -39,6 +40,13 @@ public class AesHelfer {
      */
     private static final String KRYPTO_ALGO_NAME = "AES/ECB/PKCS5Padding"; 
     
+    /** 
+     * Anzahl der Zufallszeichen, die vor den zu verschlüsselnden String
+     * gestellt werden, damit identische Klartext nicht zu identischen
+     * Chiffraten führen und ein Angreifer daraus Rückschlüsse ziehen kann.
+     */
+    private static final int ANZAHL_ZUFALLSZEICHEN = 3;
+    
     /**
      * Symmetrischer Schlüssel (128 Bit) als Hexadezimalziffer mit 32 Buchstaben,
      * aus Datei {@code application.properties}. Da es sich bei AES um ein
@@ -60,6 +68,9 @@ public class AesHelfer {
     
     /** Objekt für die (Rück-)Umwandlung von einem String nach byte[] mit Base64-Kodierung */
     private Decoder _base64Decoder = Base64.getDecoder();
+    
+    /** Sicherer Zufallsgenerator für Erzeugung zufälliger Zeichenketten. */
+    private SecureRandom _secureRandom = new SecureRandom();
     
     
     /**
@@ -135,6 +146,10 @@ public class AesHelfer {
                     
         _aesCipher.init( ENCRYPT_MODE, _secretKey ); // throws InvalidKeyException
         
+        String zufallsStr = erzeugeZufallsString( ANZAHL_ZUFALLSZEICHEN ); 
+        
+        stringKlartext = zufallsStr + stringKlartext; 
+        
         byte[] klartextBytes = stringKlartext.getBytes();
         
         byte[] encryptedBytes = _aesCipher.doFinal( klartextBytes ); // throws IllegalBlockSizeException, BadPaddingException
@@ -160,7 +175,40 @@ public class AesHelfer {
         
         byte[] decryptedBytes = _aesCipher.doFinal( encryptedBytes );
                         
-        return new String( decryptedBytes );
+        String decryptedString = new String( decryptedBytes );
+
+        return decryptedString.substring( ANZAHL_ZUFALLSZEICHEN );
+    }
+    
+    
+    /**
+     * Erzeugt ein String mit {@code anzahl} zufälligen Zeichen.
+     * 
+     * @param anzahl Anzahl zufälliger Buchstaben
+     * 
+     * @return String mit {@code anzahl} zufällig gewählter Groß-
+     *         und Kleinbuchstaben
+     */
+    public String erzeugeZufallsString( int anzahl ) {
+        
+        final StringBuilder stringBuilder = new StringBuilder( anzahl );
+        for (int i = 0; i < anzahl; i++) {
+            
+            int zufallsZahl = _secureRandom.nextInt( 26 );
+            
+            char zufallsBuchstabe;
+            if ( _secureRandom.nextBoolean() ) { // Kleinbuchstabe
+
+                zufallsBuchstabe = (char) ( 'a' + zufallsZahl );
+
+            } else { // Großbuchstabe
+                
+                zufallsBuchstabe = (char) ( 'A' + zufallsZahl );
+            }
+            stringBuilder.append( zufallsBuchstabe );
+        }
+
+        return stringBuilder.toString();
     }
     
 }
