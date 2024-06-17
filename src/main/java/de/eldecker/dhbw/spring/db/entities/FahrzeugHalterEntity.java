@@ -2,9 +2,13 @@ package de.eldecker.dhbw.spring.db.entities;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -48,6 +52,14 @@ public class FahrzeugHalterEntity {
 
     /** Wohnort in Deutschland, z.B. "Hamburg". */
     private String wohnort;
+    
+    /**
+     * Liste der KFZ-Kennzeichen, die diesem Halter zugeordnet sind.
+     * Da ein KFZ-Kennzeichen genau einen Halter hat handelt es sich
+     * um eine 1:N-Beziehung und nicht um eine N:M-Beziehung.
+     */
+    @OneToMany( mappedBy = "fahrzeugHalter" )
+    private List<KfzKennzeichenEntity> kennzeichen = new ArrayList<>( 5 );
 
 
     /**
