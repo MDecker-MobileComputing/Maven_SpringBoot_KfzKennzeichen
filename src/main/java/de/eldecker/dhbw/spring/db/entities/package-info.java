@@ -1,4 +1,4 @@
 /**
- * Dieses Paket enthält Entity-Klasse, die auf Datenbanktabellen abgebildet werden.
+ * Dieses Paket enthält Entity-Klassen, die auf Datenbanktabellen abgebildet werden.
  */
 package de.eldecker.dhbw.spring.db.entities;

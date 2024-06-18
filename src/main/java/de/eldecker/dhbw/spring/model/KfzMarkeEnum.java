@@ -2,6 +2,7 @@ package de.eldecker.dhbw.spring.model;
 
 import java.util.regex.Pattern;
 
+
 /**
  * Für Listen mit Automarken siehe z.B.:
  * <ul>

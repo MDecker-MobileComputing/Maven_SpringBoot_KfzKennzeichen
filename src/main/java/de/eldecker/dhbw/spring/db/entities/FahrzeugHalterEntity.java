@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+
 /**
  * Ein Objekt dieser Klasse repräsentiert den Halter eines KFZs.
  * Ein Halter kann mehrere KFZs halten, also von mehreren Objekten
