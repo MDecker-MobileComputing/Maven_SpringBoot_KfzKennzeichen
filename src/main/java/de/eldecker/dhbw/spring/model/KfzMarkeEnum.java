@@ -1,5 +1,6 @@
 package de.eldecker.dhbw.spring.model;
 
+import java.util.regex.Pattern;
 
 /**
  * Für Listen mit Automarken siehe z.B.:
@@ -34,6 +35,14 @@ public enum KfzMarkeEnum {
     SEAT,
     VW;
 
+    /** 
+     * Regulärer Ausdruck für Vokalerkennung.
+     * Da die Bezeichner für die Elemente im Enum nur aus Großbuchstaben bestehen
+     * dürfen, ist es ausreichend nur auf Großbuchstaben zu prüfen.
+     * Wenn ein Bezeichner für eine Automarke keinen einzigen Vokal enthält, dann
+     * wird er als Abkürzung behandelt, die unverändert zurückgegeben wird. 
+     */
+    private static final Pattern VOKAL_MATCHER = Pattern.compile(".*[AEIOU].*");
     
     /**
      * Liefert String für Anzeige der Automarke zurück, z.B. "Porsche" (statt "PORSCHE"),
@@ -44,16 +53,16 @@ public enum KfzMarkeEnum {
     @Override
     public String toString() {
         
-        final String name = name();
+        final String nameKfzMarke = name();
         
-        if ( !name.matches( ".*[AEIOUaeiou].*" ) ) {
+        if (!VOKAL_MATCHER.matcher( nameKfzMarke ).matches() ) {
             
-            return name;
+            return nameKfzMarke;
             
         } else {
             
-            return name.substring( 0, 1 ) +  
-                   name.substring( 1    ).toLowerCase();
+            return nameKfzMarke.substring( 0, 1 ) +  
+                   nameKfzMarke.substring( 1    ).toLowerCase();
         }
     }
     

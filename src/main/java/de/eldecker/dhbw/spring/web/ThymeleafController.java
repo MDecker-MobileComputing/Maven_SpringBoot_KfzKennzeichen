@@ -51,7 +51,7 @@ public class ThymeleafController {
                                          @RequestParam(value = "feld_3", required = true) int    feld3 ) {        
         final String kfzKennzeichen = 
                         String.format( "%s %s %d", 
-                                       feld1.trim().toUpperCase(), // Frontend sollte keine Kleinbuchstaben oder Leerzeichen durchlassen
+                                       feld1.trim().toUpperCase(), // Frontend sollte keine Leerzeichen durchlassen
                                        feld2.trim().toUpperCase(),
                                        feld3 );
         
