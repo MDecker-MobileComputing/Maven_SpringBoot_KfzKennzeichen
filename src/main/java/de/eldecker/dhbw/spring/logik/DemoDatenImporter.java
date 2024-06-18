@@ -51,9 +51,9 @@ public class DemoDatenImporter implements ApplicationRunner {
             FahrzeugDatenEntity  fahrzeugDaten = null; 
             KfzKennzeichenEntity kennzeichen   = null;
             
-            FahrzeugHalterEntity halter1 = new FahrzeugHalterEntity("Herr", "Max", "Mustermann", "Kronenplatz 1", 76676, "Karlsruhe" );
-            FahrzeugHalterEntity halter2 = new FahrzeugHalterEntity("Frau", "Pia", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  );
-            FahrzeugHalterEntity halter3 = new FahrzeugHalterEntity("Frau", "Eva", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  ); // Schwester von halter2
+            FahrzeugHalterEntity halter1 = new FahrzeugHalterEntity( "Herr", "Max", "Mustermann", "Kronenplatz 1", 76676, "Karlsruhe" );
+            FahrzeugHalterEntity halter2 = new FahrzeugHalterEntity( "Frau", "Pia", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  );
+            FahrzeugHalterEntity halter3 = new FahrzeugHalterEntity( "Frau", "Eva", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  ); // Schwester von halter2, gleiche Anschrift darf in DB nicht zu erkennen sein
             
             List<KfzKennzeichenEntity> kfzKennzeichenList = new ArrayList<>( 10 );
             
@@ -69,7 +69,7 @@ public class DemoDatenImporter implements ApplicationRunner {
             
             // Kennzeichen 3
             fahrzeugDaten = new FahrzeugDatenEntity( BMW, WEISS, "5UMBT935X6DFAE9BU", 1975 );            
-            kennzeichen   = new KfzKennzeichenEntity( "MA AB 123H", fahrzeugDaten, halter2 );
+            kennzeichen   = new KfzKennzeichenEntity( "MA AB 123", fahrzeugDaten, halter2, true ); // true=historisch
             kfzKennzeichenList.add( kennzeichen );
 
             // Kennzeichen 4

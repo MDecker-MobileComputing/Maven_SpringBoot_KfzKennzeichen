@@ -67,7 +67,7 @@ public class FahrzeugDatenEntity {
      *
      * <b>Referenzen:</b>
      * <ul>
-     * <li><a href="https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/kfz-zulassung/fahrzeugidentifikationsnummer/">Erklärung FIN</a></li>
+     * <li><a href="https://bit.ly/3xmm8OM">Erklärung FIN (ADAC)</a></li>
      * <li><a href="https://randommer.io/generate-vin">Zufallsgenerator für FIN</a></li>
      * </ul>
      */
@@ -159,14 +159,17 @@ public class FahrzeugDatenEntity {
 
 
     /**
-     * Gibt String-Repräsentation des Objekts zurück.
+     * Gibt String-Repräsentation des Objekts zurück, kann zur Anzeige 
+     * auf UI verwendet werden.
      *
-     * @return String mit Marke, Farbe und FIN.
+     * @return String mit Marke, Farbe, Baujahr und FIN.
+     *         Beispiel: "Grüner Porsche, Baujahr 2015, FIN=WP0AA29997BEXXUMN."
      */
     @Override
     public String toString() {
 
-        return marke + " (" + farbe + ") mit FIN=" + fin;
+        return String.format( "%s %s, Baujahr %d, FIN: %s.", 
+                              farbe, marke, baujahr, fin );
     }
 
 }

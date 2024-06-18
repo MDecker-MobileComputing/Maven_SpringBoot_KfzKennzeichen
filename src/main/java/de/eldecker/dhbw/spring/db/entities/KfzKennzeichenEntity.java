@@ -33,6 +33,8 @@ public class KfzKennzeichenEntity {
 
     /**
      * Deutsche KFZ-Kennzeichen, z.B. "KA X 1234".
+     * Das "KA" in diesem Beispiel ist das Unterscheidungszeichen,
+     * das "X 1234" ist die Erkennundgsnummer. 
      * <br><br>
      *
      * <b>Aufbau:</b>
@@ -43,23 +45,35 @@ public class KfzKennzeichenEntity {
      *     ("Y" für Bundeswehr, "X" für  Nato)</li>
      * <li>Erkennungsnummer: ein oder zwei Großbuchstaben,
      *     dann Leerzeichen, dann 1-4 Ziffern.</li>
-     * <li>Optional: "H" für historische Fahrzeuge.</li>
-     * <ul><br><br>
+     * <ul><br>
+     * Das "H" am Ende für historische Fahrzeuge (30 Jahre oder
+     * älter) ist nicht für die eindeutige idenfizierung erforderlich
+     * und darf deshalb nicht enthalten sein, siehe Attribut 
+     * {@code historisch}.
+     * <br><br> 
      *
-     * Max/Min Länge:
+     * <b>Max/Min Länge:</b>
      * <ul>
      * <li>Kürzestes KFZ-Kennzeichen: "B A 1"? (Länge: 5)</li>
-     * <li>Längstes KFZ-Kennzeichen: "BAD AB 1234H"? (Länge: 12)</li>
+     * <li>Max-Länge ist auf 8 festgesetzt (mit Leerzeichen dazwischen also 10).</li>
      * </ul><br><br>
      *
      * Das KFZ-Kennzeichen wird mit einem regulären Ausdruck geprüft
      * (Bean Validation).
      */
-    @Pattern( regexp = "[A-Z]{1,3} [A-Z]{1,2} [0-9]{1,4}(H)?",
+    @Pattern( regexp = "[A-Z]{1,3} [A-Z]{1,2} [0-9]{1,4}",
               message = "Ungültiges KFZ-Kennzeichen" )
-    @Size( min = 5, max = 12, message = "KFZ-Kennzeichen hat ungültige Länge" )
+    @Size( min = 5, max = 10, message = "KFZ-Kennzeichen hat ungültige Länge" )
     private String kennzeichen;
 
+    /**
+     * Historische Fahrzeuge (Erstzulassung vor über 30 Jahren), haben ein "H"
+     * ganz am Ende des KFZ-Kennzeichens. Das KFZ-Kennzeichen ist auch ohne
+     * "H" am Ende eindeutig, deswegen wird das "H" nicht im Attribut 
+     * {@code kennzeichen} gespeichert.
+     */
+    private boolean historisch = false;
+    
     /**
      * Fahrzeugdaten. Anstelle einer 1:1-Beziehung könnten wir die Attribute
      * in der Klasse {@link FahrzeugDatenEntity} auch hier in die Klasse
@@ -88,7 +102,7 @@ public class KfzKennzeichenEntity {
      */
     @ManyToOne( fetch = EAGER, cascade = PERSIST )
     @JoinColumn( name = "fahrzeug_halter_fk" )
-    private FahrzeugHalterEntity fahrzeugHalter;
+    private FahrzeugHalterEntity fahrzeugHalter;        
 
 
     /**
@@ -98,15 +112,33 @@ public class KfzKennzeichenEntity {
 
 
     /**
-     * Konstruktor, um alle Attribute zu setzen.
+     * Convience-Konstruktor für nicht-historische Fahrzeuge,
+     * also mit {@code historisch=false}.
      */
-    public KfzKennzeichenEntity( String kennzeichen,
-                                 FahrzeugDatenEntity fahrzeugdaten,
-                                 FahrzeugHalterEntity fahrzeugHalter) {
+    public KfzKennzeichenEntity( String               kennzeichen,
+                                 FahrzeugDatenEntity  fahrzeugdaten,
+                                 FahrzeugHalterEntity fahrzeugHalter 
+                               ) {
 
         this.kennzeichen    = kennzeichen;
         this.fahrzeugDaten  = fahrzeugdaten;
         this.fahrzeugHalter = fahrzeugHalter;
+        this.historisch     = false;
+    }
+
+    /**
+     * Konstruktor, um alle Attribute zu setzen.
+     */
+    public KfzKennzeichenEntity( String               kennzeichen,
+                                 FahrzeugDatenEntity  fahrzeugdaten,
+                                 FahrzeugHalterEntity fahrzeugHalter,
+                                 boolean              historisch 
+                               ) {
+
+        this.kennzeichen    = kennzeichen;
+        this.fahrzeugDaten  = fahrzeugdaten;
+        this.fahrzeugHalter = fahrzeugHalter;
+        this.historisch     = historisch;
     }
 
     public Long getId() {
@@ -123,6 +155,17 @@ public class KfzKennzeichenEntity {
 
         this.kennzeichen = kennzeichen;
     }
+        
+    public boolean isHistorisch() {
+        
+        return historisch;
+    }
+
+    public void setHistorisch( boolean historisch ) {
+        
+        this.historisch = historisch;
+    }
+
 
     public FahrzeugDatenEntity getFahrzeugDaten() {
 
@@ -144,10 +187,22 @@ public class KfzKennzeichenEntity {
         this.fahrzeugHalter = fahrzeugHalter;
     }
 
+    /**
+     * Gibt String mit KFZ-Kennzeichen einschl. evtl. "H" am Ende zurück.
+     * 
+     * @return KFZ-Kennzeichen, z.B. "KA T 123H"
+     */
     @Override
     public String toString() {
 
-        return "KFZ-Kennzeichen: " + kennzeichen + " - " + fahrzeugDaten;
+        if ( !historisch ) {
+            
+            return kennzeichen;
+            
+        } else {
+            
+            return kennzeichen + "H";
+        }
     }
 
 }

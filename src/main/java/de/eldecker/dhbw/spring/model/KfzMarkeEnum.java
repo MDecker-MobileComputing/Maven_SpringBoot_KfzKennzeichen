@@ -32,5 +32,5 @@ public enum KfzMarkeEnum {
     OPEL,
     PORSCHE,
     SEAT,
-    VW
+    VW    
 }
