@@ -172,9 +172,21 @@ public class FahrzeugHalterEntity {
         this.wohnort = wohnort;
     }
 
+    
+    /**
+     * String-Darstellung des Objekts, geeignet für Anzeige auf UI.
+     * 
+     *  @return String mit allen Attributen. 
+     *          Beispiel: "Frau Maria Mustermann, Klosterweg 123b, 68159 Mannheim".
+     */
     @Override
     public String toString() {
         
-        return anrede + " " + vorname + " " + nachname + " aus " + wohnort;
+        return String.format( "%s %s %s, %s, %d %s",
+                              anrede, vorname, nachname,
+                              strasseHausnummer,
+                              plz, wohnort 
+                            );
     }
+    
 }

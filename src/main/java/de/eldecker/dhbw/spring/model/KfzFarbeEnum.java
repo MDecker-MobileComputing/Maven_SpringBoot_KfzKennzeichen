@@ -2,7 +2,7 @@ package de.eldecker.dhbw.spring.model;
 
 
 /**
- * Farbe von Auto, weil die ein Unfallszeuge beobachtet haben könnte.
+ * Farbe von Auto, weil die ein Unfallzeuge beobachtet haben könnte.
  * <br><br>
  *
  * Quelle für beliebteste Auto-Farben:

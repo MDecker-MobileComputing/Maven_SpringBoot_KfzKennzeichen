@@ -11,16 +11,16 @@
     <h1>KFZ-Kennzeichen-Abfrage: Ergebnis</h1>
 
     <p th:text="${nachricht}"></p>
-    <br><br>
+    <br>
 
     <div th:if="${kennzeichenEntity != null}">
         <p>
             <span class="fett">Halter: </span>
-            <span th:text="${kennzeichenEntity.getFahrzeugHalter()}"></span>
+            <span th:text="${kennzeichenEntity.getFahrzeugHalter()}"></span>.
         </p>
         <p>
             <span class="fett">Fahrzeug: </span>
-            <span th:text="${kennzeichenEntity.getFahrzeugDaten()}"></span>
+            <span th:text="${kennzeichenEntity.getFahrzeugDaten()}"></span>.
         </p>
     </div>
     <br><br>

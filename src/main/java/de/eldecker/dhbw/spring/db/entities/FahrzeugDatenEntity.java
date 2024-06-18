@@ -163,12 +163,12 @@ public class FahrzeugDatenEntity {
      * auf UI verwendet werden.
      *
      * @return String mit Marke, Farbe, Baujahr und FIN.
-     *         Beispiel: "Grüner Porsche, Baujahr 2015, FIN=WP0AA29997BEXXUMN."
+     *         Beispiel: "Grüner Porsche, Baujahr 2015, FIN=WP0AA29997BEXXUMN"
      */
     @Override
     public String toString() {
 
-        return String.format( "%s %s, Baujahr %d, FIN: %s.", 
+        return String.format( "%s %s, Baujahr %d, FIN: %s", 
                               farbe, marke, baujahr, fin );
     }
 

@@ -1,9 +1,11 @@
 package de.eldecker.dhbw.spring.logik;
 
-import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.ROT;
-import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.ORANGE;
-import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.WEISS;
 import static de.eldecker.dhbw.spring.model.KfzMarkeEnum.BMW;
+import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.ORANGE;
+import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.PINK;
+import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.ROT;
+import static de.eldecker.dhbw.spring.model.KfzFarbeEnum.WEISS;
+import static de.eldecker.dhbw.spring.model.KfzMarkeEnum.PORSCHE;
 import static de.eldecker.dhbw.spring.model.KfzMarkeEnum.MERCEDES;
 import static de.eldecker.dhbw.spring.model.KfzMarkeEnum.VW;
 
@@ -51,7 +53,7 @@ public class DemoDatenImporter implements ApplicationRunner {
             FahrzeugDatenEntity  fahrzeugDaten = null; 
             KfzKennzeichenEntity kennzeichen   = null;
             
-            FahrzeugHalterEntity halter1 = new FahrzeugHalterEntity( "Herr", "Max", "Mustermann", "Kronenplatz 1", 76676, "Karlsruhe" );
+            FahrzeugHalterEntity halter1 = new FahrzeugHalterEntity( "Herr", "Max", "Mustermann", "Kronenplatz 1", 76676, "Karlsruhe" ); // hat mehrere Autos (Sammler?)
             FahrzeugHalterEntity halter2 = new FahrzeugHalterEntity( "Frau", "Pia", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  );
             FahrzeugHalterEntity halter3 = new FahrzeugHalterEntity( "Frau", "Eva", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  ); // Schwester von halter2, gleiche Anschrift darf in DB nicht zu erkennen sein
             
@@ -68,11 +70,16 @@ public class DemoDatenImporter implements ApplicationRunner {
             kfzKennzeichenList.add( kennzeichen );
             
             // Kennzeichen 3
+            fahrzeugDaten = new FahrzeugDatenEntity( PORSCHE, PINK, "WP0AA299283HJVYP4", 2019 );            
+            kennzeichen   = new KfzKennzeichenEntity( "BAD E 1234", fahrzeugDaten, halter1 );
+            kfzKennzeichenList.add( kennzeichen );
+                        
+            // Kennzeichen 4
             fahrzeugDaten = new FahrzeugDatenEntity( BMW, WEISS, "5UMBT935X6DFAE9BU", 1975 );            
             kennzeichen   = new KfzKennzeichenEntity( "MA AB 123", fahrzeugDaten, halter2, true ); // true=historisch
             kfzKennzeichenList.add( kennzeichen );
 
-            // Kennzeichen 4
+            // Kennzeichen 5
             fahrzeugDaten = new FahrzeugDatenEntity( MERCEDES, WEISS, "WDCYR49E636ATTZ9R", 2011 );            
             kennzeichen   = new KfzKennzeichenEntity( "MA X 777", fahrzeugDaten, halter3 );
             kfzKennzeichenList.add( kennzeichen );
