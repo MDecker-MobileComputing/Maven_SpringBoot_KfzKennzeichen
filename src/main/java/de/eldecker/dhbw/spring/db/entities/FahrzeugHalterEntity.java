@@ -99,12 +99,12 @@ public class FahrzeugHalterEntity {
     public FahrzeugHalterEntity( String anrede, String vorname, String nachname,
                                  String anschrift, int plz, String wohnort ) {
 
-       this.anrede    = anrede;
-       this.vorname   = vorname;
-       this.nachname  = nachname;
+       this.anrede            = anrede;
+       this.vorname           = vorname;
+       this.nachname          = nachname;
        this.strasseHausnummer = anschrift;
-       this.plz       = plz;
-       this.wohnort   = wohnort;
+       this.plz               = plz;
+       this.wohnort           = wohnort;
     }
 
     public Long getId() {
