@@ -14,6 +14,13 @@ import jakarta.persistence.AttributeConverter;
  * zu verschlüsseln und beim Lesen wieder zu entschlüsseln. Den zu verschlüsselnden 
  * Attributen ist mit der Annotation {@code Convert} dieser {@code AttributeConverter}
  * zuzuweisen.
+ * <br><br>
+ * 
+ * Es wird der symmetrische Verschlüsselungsalgorithmus "AES" mit einer Schlüssel-Länge
+ * von 128 Bit eingesetzt, siehe {@link AesHelfer}. Der Schlüssel wird in der Datei
+ * {@code application.properties} definiert; für eine produktive Anwendung sollte er
+ * von der Ausführungsumgebung der Spring-Boot-Anwendung über eine Umgebungsvariable
+ * bereitgestellt werden. 
  */
 public class KryptoStringAttributeConverter implements AttributeConverter<String, String> {
 
@@ -25,7 +32,7 @@ public class KryptoStringAttributeConverter implements AttributeConverter<String
     
     
     /**
-     * Attribut vor Speichern auf Datenbank verschlüsseln.
+     * String-Attribut vor Speichern auf Datenbank verschlüsseln.
      * 
      * @param stringKlartext Attributwert im Klartext
      * 
@@ -48,7 +55,7 @@ public class KryptoStringAttributeConverter implements AttributeConverter<String
 
 
     /**
-     * Attribute von Datenbank entschlüsseln.
+     * String-Attribut von Datenbank entschlüsseln.
      * 
      * @param stringVerschluesselt Chiffre für Attributwert
      * 
