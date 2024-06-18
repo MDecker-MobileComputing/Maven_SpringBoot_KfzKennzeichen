@@ -15,9 +15,9 @@ import jakarta.persistence.AttributeConverter;
  * Attributen ist mit der Annotation {@code Convert} dieser {@code AttributeConverter}
  * zuzuweisen.
  */
-public class StringAttributVerEntschluessler implements AttributeConverter<String, String> {
+public class KryptoStringAttributeConverter implements AttributeConverter<String, String> {
 
-    private final static Logger LOG = LoggerFactory.getLogger( StringAttributVerEntschluessler.class );
+    private final static Logger LOG = LoggerFactory.getLogger( KryptoStringAttributeConverter.class );
     
     /** Bean für Ver- und Entschlüsselung. */
     @Autowired

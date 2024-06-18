@@ -5,7 +5,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.eldecker.dhbw.spring.db.krypto.StringAttributVerEntschluessler;
+import de.eldecker.dhbw.spring.db.krypto.KryptoStringAttributeConverter;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,17 +41,18 @@ public class FahrzeugHalterEntity {
     @GeneratedValue( strategy = AUTO )
     private Long id;
 
-    /** Anrede, z.B. "Herr" oder "Frau Dr."; wird nicht verschlüsselt. */
+    /** Anrede, z.B. "Herr", "Frau Dr." oder "Hr. Dipl.-Ing"; wird verschlüsselt. */
+    @Convert( converter = KryptoStringAttributeConverter.class )
     @NotNull( message = "Andrede darf nicht leer" ) 
     private String anrede;
 
     /** Vorname, z.B. "Herbert"; wird verschlüsselt. */
-    @Convert( converter = StringAttributVerEntschluessler.class )
+    @Convert( converter = KryptoStringAttributeConverter.class )
     @NotNull( message = "Vorname darf nicht leer sein" )
     private String vorname;
 
     /** Vorname, z.B. "Müller-Lüdenscheidt"; wird verschlüsselt. */
-    @Convert( converter = StringAttributVerEntschluessler.class )
+    @Convert( converter = KryptoStringAttributeConverter.class )
     @NotNull( message = "Nachname darf nicht leer sein" )
     private String nachname;
 
@@ -59,7 +60,7 @@ public class FahrzeugHalterEntity {
      * Anschrift mit Hausnummer (in Deutschland), z.B. "Hauptstraße 23B";
      * wird verschlüsselt. 
      */
-    @Convert( converter = StringAttributVerEntschluessler.class )
+    @Convert( converter = KryptoStringAttributeConverter.class )
     @NotNull( message = "Straße und Hausnummer darf nicht leer sein" )
     private String strasseHausnummer;
 

@@ -23,7 +23,7 @@ import jakarta.annotation.PostConstruct;
 
 
 /**
- * Bean-Klasse für symmetrische Verschlüsselung mit AES128.
+ * Bean-Klasse für symmetrische Verschlüsselung mit dem Algorithmus "AES128".
  */
 @Component
 public class AesHelfer {
@@ -65,17 +65,16 @@ public class AesHelfer {
     @Value( "${de.eldecker.kfz-kennzeichen.krypto.versalzung:false}" )
     private boolean _versalzung;
     
-
     /** Objekt für Ver-/Entschlüsselung */
     private Cipher _aesCipher = null;
 
     /** Objekt mit symmetrischem Schlüssel */
     private SecretKeySpec _secretKey = null;
 
-    /** Objekt für die Umwandlung von byte[] nach String mit Base64-Kodierung */
+    /** Objekt für die Umwandlung von {@code byte[]} nach String mit Base64-Kodierung */
     private Encoder _base64Encoder = Base64.getEncoder();
 
-    /** Objekt für die (Rück-)Umwandlung von einem String nach byte[] mit Base64-Kodierung */
+    /** Objekt für die (Rück-)Umwandlung von einem String nach {@code byte[]} mit Base64-Kodierung */
     private Decoder _base64Decoder = Base64.getDecoder();
 
     /** Sicherer Zufallsgenerator für Erzeugung zufälliger Zeichenketten. */
