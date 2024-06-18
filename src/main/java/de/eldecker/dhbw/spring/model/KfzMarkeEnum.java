@@ -2,7 +2,7 @@ package de.eldecker.dhbw.spring.model;
 
 
 /**
- * Für Listen mit Automarken siehe:
+ * Für Listen mit Automarken siehe z.B.:
  * <ul>
  * <li>https://www.autoscout24.de/</li>
  * <li>https://www.autohaus24.de/auto-lexikon/automarken</li>
@@ -13,15 +13,15 @@ package de.eldecker.dhbw.spring.model;
  * eines Fahrzeugs gespeichert, weil diese von einem Zeugen bei einem Unfalls
  * am ehesten erkannt wird.
  * <br><br>
- * 
+ *
  * Es gibt Hersteller, die mehrere marken haben, z.B. "VW" bringt unter
  * "VW" selbst Autos heraus (Modelle z.B. Passat, Golf, Polo), aber
- * Seat gehört auch zum VW-Konzert. 
+ * Seat gehört auch zum VW-Konzert.
  */
 public enum KfzMarkeEnum {
-    
+
     MARKE_UNBEKANNT,
-    
+
     AUDI,
     BMW,
     FERRARI,
@@ -32,5 +32,29 @@ public enum KfzMarkeEnum {
     OPEL,
     PORSCHE,
     SEAT,
-    VW    
+    VW;
+
+    
+    /**
+     * Liefert String für Anzeige der Automarke zurück, z.B. "Porsche" (statt "PORSCHE"),
+     * aber "BWM" (Abkürzungen, d.h. Markennamen ohne Vokal, werden unverändert zurückgegeben).
+     * 
+     * @return String zur Anzeige 
+     */
+    @Override
+    public String toString() {
+        
+        final String name = name();
+        
+        if ( !name.matches( ".*[AEIOUaeiou].*" ) ) {
+            
+            return name;
+            
+        } else {
+            
+            return name.substring( 0, 1 ) +  
+                   name.substring( 1    ).toLowerCase();
+        }
+    }
+    
 }

@@ -53,9 +53,10 @@ public class DemoDatenImporter implements ApplicationRunner {
             FahrzeugDatenEntity  fahrzeugDaten = null; 
             KfzKennzeichenEntity kennzeichen   = null;
             
-            FahrzeugHalterEntity halter1 = new FahrzeugHalterEntity( "Herr", "Max", "Mustermann", "Kronenplatz 1", 76676, "Karlsruhe" ); // hat mehrere Autos (Sammler?)
-            FahrzeugHalterEntity halter2 = new FahrzeugHalterEntity( "Frau", "Pia", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  );
-            FahrzeugHalterEntity halter3 = new FahrzeugHalterEntity( "Frau", "Eva", "Musterfrau", "Am Ring 42b"  , 68159, "Mannheim"  ); // Schwester von halter2, gleiche Anschrift darf in DB nicht zu erkennen sein
+            FahrzeugHalterEntity halter1 = new FahrzeugHalterEntity( "Herr"    , "Max", "Mustermann" , "Kronenplatz 1"  , 76676, "Karlsruhe"   ); // hat mehrere Autos
+            FahrzeugHalterEntity halter2 = new FahrzeugHalterEntity( "Frau"    , "Pia", "Musterfrau" , "Am Ring 42b"    , 68159, "Mannheim"    );
+            FahrzeugHalterEntity halter3 = new FahrzeugHalterEntity( "Frau"    , "Eva", "Musterfrau" , "Am Ring 42b"    , 68159, "Mannheim"    ); // Schwester von halter2, gleiche Anschrift darf in DB nicht zu erkennen sein
+            FahrzeugHalterEntity halter4 = new FahrzeugHalterEntity( "Herr Dr.", "Jan", "Mustermeyer", "Bahnhofstraße 5", 76532, "Baden-Baden" );
             
             List<KfzKennzeichenEntity> kfzKennzeichenList = new ArrayList<>( 10 );
             
@@ -71,7 +72,7 @@ public class DemoDatenImporter implements ApplicationRunner {
             
             // Kennzeichen 3
             fahrzeugDaten = new FahrzeugDatenEntity( PORSCHE, PINK, "WP0AA299283HJVYP4", 2019 );            
-            kennzeichen   = new KfzKennzeichenEntity( "BAD E 1234", fahrzeugDaten, halter1 );
+            kennzeichen   = new KfzKennzeichenEntity( "BAD E 1234", fahrzeugDaten, halter4 );
             kfzKennzeichenList.add( kennzeichen );
                         
             // Kennzeichen 4
