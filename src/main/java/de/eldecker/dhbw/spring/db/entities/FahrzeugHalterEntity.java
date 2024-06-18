@@ -12,6 +12,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Ein Objekt dieser Klasse repräsentiert den Halter eines KFZs.
@@ -23,6 +26,10 @@ import jakarta.persistence.Table;
  *  sein muss, deshalb ist der Wert {@code int} für das Attribut
  *  {@code postleitzahl} ausreichend und es wird kein Attribut
  *  für ein Land benötigt.
+ *  <br><br>
+ *  
+ *  Einige der Attribute werden in veschlüsselter Form auf der 
+ *  Datenbank gespeichert.
  */
 @Entity
 @Table( name = "FAHRZEUG_HALTER" )
@@ -34,14 +41,17 @@ public class FahrzeugHalterEntity {
     private Long id;
 
     /** Anrede, z.B. "Herr" oder "Frau Dr."; wird nicht verschlüsselt. */
+    @NotNull( message = "Andrede darf nicht leer" ) 
     private String anrede;
 
     /** Vorname, z.B. "Herbert"; wird verschlüsselt. */
     @Convert( converter = StringAttributVerEntschluessler.class )
+    @NotNull( message = "Vorname darf nicht leer sein" )
     private String vorname;
 
     /** Vorname, z.B. "Müller-Lüdenscheidt"; wird verschlüsselt. */
     @Convert( converter = StringAttributVerEntschluessler.class )
+    @NotNull( message = "Nachname darf nicht leer sein" )
     private String nachname;
 
     /** 
@@ -49,16 +59,23 @@ public class FahrzeugHalterEntity {
      * wird verschlüsselt. 
      */
     @Convert( converter = StringAttributVerEntschluessler.class )
-    private String anschrift;
+    @NotNull( message = "Straße und Hausnummer darf nicht leer sein" )
+    private String strasseHausnummer;
 
     /**
      * Fünfstellige Postleitzahl in Deutschland; die evtl. führende
      * 0 (z.B. "04103" für einen Teil von Leipzig) muss ggf. bei der
      * Anzeige ergänzt werden.
+     * <br><br>
+     * Die numerisch kleinste vergebene PLZ in diesem System ist {@code 1001}
+     * für die Stadtverwaltung Dresden.
      */
+    @Min( value =  1_001, message = "Postleitzahl muss mindestens vier Stellen haben"     )
+    @Max( value = 99_999, message = "Postleitzahl darf nicht mehr als fünf Stellen haben" )
     private int plz;
 
     /** Wohnort in Deutschland, z.B. "Hamburg". */
+    @NotNull( message = "Wohnort darf nicht leer sein" )
     private String wohnort;
     
     /**
@@ -84,7 +101,7 @@ public class FahrzeugHalterEntity {
        this.anrede    = anrede;
        this.vorname   = vorname;
        this.nachname  = nachname;
-       this.anschrift = anschrift;
+       this.strasseHausnummer = anschrift;
        this.plz       = plz;
        this.wohnort   = wohnort;
     }
@@ -127,12 +144,12 @@ public class FahrzeugHalterEntity {
 
     public String getAnschrift() {
         
-        return anschrift;
+        return strasseHausnummer;
     }
 
     public void setAnschrift( String anschrift ) {
         
-        this.anschrift = anschrift;
+        this.strasseHausnummer = anschrift;
     }
 
     public int getPlz() {

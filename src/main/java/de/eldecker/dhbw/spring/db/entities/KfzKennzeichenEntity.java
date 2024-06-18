@@ -14,6 +14,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 
 /**
@@ -33,7 +34,7 @@ public class KfzKennzeichenEntity {
     /**
      * Deutsche KFZ-Kennzeichen, z.B. "KA X 1234".
      * <br><br>
-     * 
+     *
      * <b>Aufbau:</b>
      * <ul>
      * <li>Unterscheidungszeichen: 1-3 Großbuchstaben, z.B.
@@ -45,11 +46,18 @@ public class KfzKennzeichenEntity {
      * <li>Optional: "H" für historische Fahrzeuge.</li>
      * <ul><br><br>
      *
+     * Max/Min Länge:
+     * <ul>
+     * <li>Kürzestes KFZ-Kennzeichen: "B A 1"? (Länge: 5)</li>
+     * <li>Längstes KFZ-Kennzeichen: "BAD AB 1234H"? (Länge: 12)</li>
+     * </ul><br><br>
+     *
      * Das KFZ-Kennzeichen wird mit einem regulären Ausdruck geprüft
      * (Bean Validation).
      */
     @Pattern( regexp = "[A-Z]{1,3} [A-Z]{1,2} [0-9]{1,4}(H)?",
               message = "Ungültiges KFZ-Kennzeichen" )
+    @Size( min = 5, max = 12, message = "KFZ-Kennzeichen hat ungültige Länge" )
     private String kennzeichen;
 
     /**
@@ -73,12 +81,12 @@ public class KfzKennzeichenEntity {
     @OneToOne( fetch = EAGER, cascade = PERSIST )
     @JoinColumn( name = "fahrzeug_daten_fk" )
     private FahrzeugDatenEntity fahrzeugDaten;
-    
+
     /**
      * Ein KFZ-Kennzeichen ist genau einem Fahrzeughalter zugeordnet (dieser kann aber
      * weitere Fahrzeuge mit anderen KFZ-Kennzeichen besitzen).
      */
-    @ManyToOne( fetch = EAGER, cascade = PERSIST ) 
+    @ManyToOne( fetch = EAGER, cascade = PERSIST )
     @JoinColumn( name = "fahrzeug_halter_fk" )
     private FahrzeugHalterEntity fahrzeugHalter;
 
@@ -92,7 +100,7 @@ public class KfzKennzeichenEntity {
     /**
      * Konstruktor, um alle Attribute zu setzen.
      */
-    public KfzKennzeichenEntity( String kennzeichen, 
+    public KfzKennzeichenEntity( String kennzeichen,
                                  FahrzeugDatenEntity fahrzeugdaten,
                                  FahrzeugHalterEntity fahrzeugHalter) {
 
@@ -125,18 +133,18 @@ public class KfzKennzeichenEntity {
 
         this.fahrzeugDaten = fahrzeugDaten;
     }
-        
+
     public FahrzeugHalterEntity getFahrzeugHalter() {
-        
+
         return fahrzeugHalter;
     }
 
     public void setFahrzeugHalter( FahrzeugHalterEntity fahrzeugHalter ) {
-        
+
         this.fahrzeugHalter = fahrzeugHalter;
     }
 
-
+    @Override
     public String toString() {
 
         return "KFZ-Kennzeichen: " + kennzeichen + " - " + fahrzeugDaten;

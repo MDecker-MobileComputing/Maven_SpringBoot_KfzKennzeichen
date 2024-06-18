@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 
 
 /**
@@ -70,6 +71,8 @@ public class FahrzeugDatenEntity {
      * <li><a href="https://randommer.io/generate-vin">Zufallsgenerator für FIN</a></li>
      * </ul>
      */
+    @Pattern( regexp = "[A-Z0-9]{17}",
+              message = "Ungültiges Format für Fahrzeug-Identifizierungsnummer (FIN)" )
     private String fin;
 
     /**
