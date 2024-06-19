@@ -43,8 +43,17 @@ public enum KfzMarkeEnum {
      * dürfen, ist es ausreichend nur auf Großbuchstaben zu prüfen.
      * Wenn ein Bezeichner für eine Automarke keinen einzigen Vokal enthält, dann
      * wird er als Abkürzung behandelt, die unverändert zurückgegeben wird. 
+     * <br><br>
+     * 
+     * Eklärung regulärer Ausdruck: 
+     * <ul>
+     * <li>Am Anfang und am Ende steht ".*", was für beliebige Zeichen (auch keine) 
+     *     steht.</li>
+     * <li>Es folgt dann in eckigen Klammern eine Liste der gesuchten Großbuchstaben
+     *     (Vokale).</li>   
+     * </ul>
      */
-    private static final Pattern VOKAL_MATCHER = Pattern.compile(".*[AEIOU].*");
+    private static final Pattern VOKAL_MATCHER = Pattern.compile( ".*[AEIOU].*" );
 
     
     /**
