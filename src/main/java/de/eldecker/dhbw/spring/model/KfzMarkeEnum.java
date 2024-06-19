@@ -36,6 +36,7 @@ public enum KfzMarkeEnum {
     SEAT,
     VW;
 
+    
     /** 
      * Regulärer Ausdruck für Vokalerkennung.
      * Da die Bezeichner für die Elemente im Enum nur aus Großbuchstaben bestehen
@@ -44,6 +45,7 @@ public enum KfzMarkeEnum {
      * wird er als Abkürzung behandelt, die unverändert zurückgegeben wird. 
      */
     private static final Pattern VOKAL_MATCHER = Pattern.compile(".*[AEIOU].*");
+
     
     /**
      * Liefert String für Anzeige der Automarke zurück, z.B. "Porsche" (statt "PORSCHE"),
@@ -56,7 +58,7 @@ public enum KfzMarkeEnum {
         
         final String nameKfzMarke = name();
         
-        if (!VOKAL_MATCHER.matcher( nameKfzMarke ).matches() ) {
+        if ( !VOKAL_MATCHER.matcher( nameKfzMarke ).matches() ) {
             
             return nameKfzMarke;
             
