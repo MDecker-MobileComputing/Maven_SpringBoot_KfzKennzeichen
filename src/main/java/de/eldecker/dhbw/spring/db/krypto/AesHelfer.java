@@ -94,14 +94,13 @@ public class AesHelfer {
      * möglich ist.
      * <br><br>
      *
-     * Es wird auch ein Test-String ver- und wieder entschlüsselt.
-     *
-     * @throws NoSuchAlgorithmException Verschlüsselungsalgo nicht gefunden
+     * Es wird auch die Methode {@link #testVerEntschluesselung()}
+     * aufgerufen.
      *
      * @throws GeneralSecurityException Fehler bei Ver- oder Entschlüsselung
      */
     @PostConstruct
-    private void initialisierung() throws NoSuchAlgorithmException, GeneralSecurityException {
+    private void initialisierung() throws GeneralSecurityException {
 
         if ( _schluesselHex.length() != 32 ) {
 
@@ -123,7 +122,9 @@ public class AesHelfer {
     /**
      * Test: Verschlüsselt einen String und entschlüsselt ihn wieder.
      *
-     *  @throws GeneralSecurityException Fehler bei Ver- oder Entschlüsselung
+     *  @throws GeneralSecurityException Fehler bei Ver- oder Entschlüsselung, oder wenn
+     *                                   Entschlüsselungsergebnis nicht dem Ausgangstext
+     *                                   entspricht.
      */
     private void testVerEntschluesselung() throws GeneralSecurityException {
 
