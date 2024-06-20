@@ -101,7 +101,7 @@ public class AesHelfer {
      * @throws GeneralSecurityException Fehler bei Ver- oder Entschlüsselung
      */
     @PostConstruct
-    public void initialisierung() throws NoSuchAlgorithmException, GeneralSecurityException {
+    private void initialisierung() throws NoSuchAlgorithmException, GeneralSecurityException {
 
         if ( _schluesselHex.length() != 32 ) {
 
@@ -238,7 +238,7 @@ public class AesHelfer {
      * @return String mit {@code anzahl} zufällig gewählter Groß-
      *         und Kleinbuchstaben, für {@code anzahl=3} z.B. "XaD"
      */
-    public String erzeugeZufallsString( int anzahl ) {
+    private String erzeugeZufallsString( int anzahl ) {
 
         final StringBuilder stringBuilder = new StringBuilder( anzahl );
         for (int i = 0; i < anzahl; i++) {
