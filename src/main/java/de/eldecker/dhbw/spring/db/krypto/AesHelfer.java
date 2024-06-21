@@ -52,8 +52,19 @@ public class AesHelfer {
      * symmetrisches Verfahren handelt, wird dieses Schlüssel sowohl für die
      * Ver- als auch die Entschlüsselung benötigt.
      * Default-Wert ist ein leerer String.
+     * <br><br>
+     * 
+     * Es könnte auch die folgende Validierungsannotation mit 
+     * {@code jakarta.validation.constraints.Pattern} vorgenommen werden;
+     * wenn aber diese Überprüfung das Programm beim Hochfahren abbrechen
+     * lässt, dann findet man die Fehlermeldung im Exception-Trace.
+     * <br>
+     * <code> 
+     * @Pattern( regexp = "^[0-9a-fA-F]{32}$",
+     *           message = "Der Schlüssel muss aus 32 Hex-Ziffern bestehen" )
+     * </code>
      */
-    @Value( "${de.eldecker.kfz-kennzeichen.krypto.schluessel:}" )
+    @Value( "${de.eldecker.kfz-kennzeichen.krypto.schluessel:}" )                  
     private String _schluesselHex;
 
     /**
@@ -109,7 +120,7 @@ public class AesHelfer {
 
         _aesCipher = Cipher.getInstance( KRYPTO_ALGO_NAME );
 
-        final byte[] keyBytes = parseHexBinary( _schluesselHex );
+        final byte[] keyBytes = parseHexBinary( _schluesselHex ); // throws IllegalArgumentException (wenn keine gültige Hex-Zahl)
         _secretKey = new SecretKeySpec( keyBytes, "AES" );
 
         testVerEntschluesselung(); // throws GeneralSecurityException
@@ -219,7 +230,7 @@ public class AesHelfer {
      *                    werden sollen
      *
      * @return {@code inputString} ohne Zufallszeichen am Anfang.<br>
-     *         Beispiel: Für {@code inputString = "ByX Meier"} und 
+     *         Beispiel: Für {@code inputString = "ByX Meier"} und
      *                   {@code ANZAHL_ZUFALLSZEICHEN = 3} wird "Meier"
      *                   zurückgeliefert.
      */
@@ -266,10 +277,10 @@ public class AesHelfer {
      * entsprechen, also 128 Bit für AES.
      * <br><br>
      *
-     * Leider kann dieser IV im vorliegenden Programm nicht verwendet werden, 
-     * da der {@code AttributeConverter}, mit dem die Ver- und Entschlüsselung 
+     * Leider kann dieser IV im vorliegenden Programm nicht verwendet werden,
+     * da der {@code AttributeConverter}, mit dem die Ver- und Entschlüsselung
      * vorgenommen wird, nicht auf eine andere Tabellenspalte mit dem IV
-     * zugreifen kann. 
+     * zugreifen kann.
      * <b>Deshalb wird diese Methode im Programm nicht verwendet.</b>
      *
      * @return Zufälliger Initialisierungsvektor (128 Bit) in
