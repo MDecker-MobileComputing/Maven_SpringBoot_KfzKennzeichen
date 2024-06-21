@@ -8,7 +8,6 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
@@ -56,15 +55,16 @@ public class AesHelfer {
      */
     @Value( "${de.eldecker.kfz-kennzeichen.krypto.schluessel:}" )
     private String _schluesselHex;
-    
-    /** 
+
+    /**
      * Wenn {@code true}, dann wird den String vor Verschlüsselung ein
      * Zufalls-String vorangestellt, damit gleiche Klartexte nicht zur
      * gleichen Chiffre führen. Per Default ausgeschaltet.
      */
     @Value( "${de.eldecker.kfz-kennzeichen.krypto.versalzung:false}" )
     private boolean _versalzung;
-    
+
+
     /** Objekt für Ver-/Entschlüsselung */
     private Cipher _aesCipher = null;
 
@@ -188,40 +188,43 @@ public class AesHelfer {
         return salzEntfernen( decryptedString );
     }
 
-    
+
     /**
      * Vor {@code inputString} einige Zufallszeichen dazu, damit gleiche
      * Klartexte nicht gleiche Chiffren ergeben; wenn Versalzung ausgeschaltet,
      * dann wird {@code inputString} unverändert zurückgegeben.
-     * 
+     *
      * @param inputString String, vor den einige Zufallszeichen gestellt werden
-     * 
+     *
      * @return {@code inputString} mit einigen Zufallszeichen vorne dran
      */
     private String salzDazu( String inputString ) {
 
         if ( _versalzung == false ) {
-            
+
             return inputString;
         }
-        
+
         final String zufallsStr = erzeugeZufallsString( ANZAHL_ZUFALLSZEICHEN );
         return zufallsStr + inputString;
     }
 
-    
+
     /**
      * Von {@code inputString} werden die vorangestellten Zufallszeichen entfernt.
      * Wenn Versalzung ausgeschaltet ist, dann wird {@code inputString} unverändert
      * zurückgegeben.
-     * 
+     *
      * @param inputString String, von dem die vorangestellten Zufallszeichen entfernt
      *                    werden sollen
-     *                    
-     * @return {@code inputString} ohne Zufallszeichen am Anfang 
+     *
+     * @return {@code inputString} ohne Zufallszeichen am Anfang.<br>
+     *         Beispiel: Für {@code inputString = "ByX Meier"} und 
+     *                   {@code ANZAHL_ZUFALLSZEICHEN = 3} wird "Meier"
+     *                   zurückgeliefert.
      */
     private String salzEntfernen( String inputString ) {
-        
+
         if ( _versalzung == false || inputString.length() <= ANZAHL_ZUFALLSZEICHEN ) {
 
             return inputString;
@@ -230,7 +233,7 @@ public class AesHelfer {
         return inputString.substring( ANZAHL_ZUFALLSZEICHEN );
     }
 
-    
+
     /**
      * Erzeugt String mit {@code anzahl} zufälliger Buchstaben.
      *
@@ -254,30 +257,31 @@ public class AesHelfer {
         return stringBuilder.toString();
     }
 
-    
+
     /**
      * Erzeugt zufälligen Initialisierungsvektor (IV), der für einige
      * Betriebmodi von Blockchiffren benötigt wird, z.B. für den
      * "Chiper Block Mode" (CBC). Der Länge des IVs sollte der
      * Blockgröße des symmetrischen Verschlüsselungsalgorithmus
      * entsprechen, also 128 Bit für AES.
-     * <br><br> 
-     * 
-     * Leider kann dieser IV nicht verwendet, da der {@code AttributeConverter},  
-     * mit dem die Ver- und Entschlüsselung vorgenommen wird, nicht auf eine
-     * andere Tabellenspalte mit dem IV zugreifen kann. <b>Deshalb wird diese
-     * Methode im Programm nicht aufgerufen.</b>
-     * 
-     * @return Zufälliger Initialisierungsvektor (128 Bit) in 
+     * <br><br>
+     *
+     * Leider kann dieser IV im vorliegenden Programm nicht verwendet werden, 
+     * da der {@code AttributeConverter}, mit dem die Ver- und Entschlüsselung 
+     * vorgenommen wird, nicht auf eine andere Tabellenspalte mit dem IV
+     * zugreifen kann. 
+     * <b>Deshalb wird diese Methode im Programm nicht verwendet.</b>
+     *
+     * @return Zufälliger Initialisierungsvektor (128 Bit) in
      *         Base64-Codierung.<br>
      *         Beispielwert: {@code 2W2o7iRS7+DnsP2Lb8O0ZA==}
      */
     public String erzeugeZufaelligenIV() {
 
         byte[] zufallsByteArray = new byte[ 16 ]; // 16Byte * 8 Bit/Byte = 128 Bit
-        
+
         _secureRandom.nextBytes( zufallsByteArray );
-        
+
         return _base64Encoder.encodeToString( zufallsByteArray );
     }
 }
