@@ -267,32 +267,5 @@ public class AesHelfer {
 
         return stringBuilder.toString();
     }
-
-
-    /**
-     * Erzeugt zufälligen Initialisierungsvektor (IV), der für einige
-     * Betriebmodi von Blockchiffren benötigt wird, z.B. für den
-     * "Chiper Block Mode" (CBC). Der Länge des IVs sollte der
-     * Blockgröße des symmetrischen Verschlüsselungsalgorithmus
-     * entsprechen, also 128 Bit für AES.
-     * <br><br>
-     *
-     * Leider kann dieser IV im vorliegenden Programm nicht verwendet werden,
-     * da der {@code AttributeConverter}, mit dem die Ver- und Entschlüsselung
-     * vorgenommen wird, nicht auf eine andere Tabellenspalte mit dem IV
-     * zugreifen kann.
-     * <b>Deshalb wird diese Methode im Programm nicht verwendet.</b>
-     *
-     * @return Zufälliger Initialisierungsvektor (128 Bit) in
-     *         Base64-Codierung.<br>
-     *         Beispielwert: {@code 2W2o7iRS7+DnsP2Lb8O0ZA==}
-     */
-    public String erzeugeZufaelligenIV() {
-
-        byte[] zufallsByteArray = new byte[ 16 ]; // 16Byte * 8 Bit/Byte = 128 Bit
-
-        _secureRandom.nextBytes( zufallsByteArray );
-
-        return _base64Encoder.encodeToString( zufallsByteArray );
-    }
+    
 }
