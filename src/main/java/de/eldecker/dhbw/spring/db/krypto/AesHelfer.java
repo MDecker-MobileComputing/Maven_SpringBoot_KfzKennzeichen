@@ -57,8 +57,10 @@ public class AesHelfer {
      * Es könnte auch die folgende Validierungsannotation mit 
      * {@code jakarta.validation.constraints.Pattern} vorgenommen werden;
      * wenn aber diese Überprüfung das Programm beim Hochfahren abbrechen
-     * lässt, dann findet man die Fehlermeldung im Exception-Trace.
-     * <br>
+     * lässt, dann findet man die Fehlermeldung nicht im Exception-Trace,
+     * weil die Anzahl der ausgegebenen Einträge vom Exception-Stack
+     * beschränkt ist.<br>
+     * 
      * <code> 
      * @Pattern( regexp = "^[0-9a-fA-F]{32}$",
      *           message = "Der Schlüssel muss aus 32 Hex-Ziffern bestehen" )
