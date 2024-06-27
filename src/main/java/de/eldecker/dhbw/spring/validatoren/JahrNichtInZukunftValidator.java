@@ -31,7 +31,7 @@ public class JahrNichtInZukunftValidator implements ConstraintValidator<JahrNich
         
         if ( jahreszahl == null ) {
             
-            return true;
+            return false;
         }
         
         final int jahrAktuell = now().getYear();
