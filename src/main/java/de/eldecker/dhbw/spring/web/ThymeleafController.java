@@ -46,9 +46,9 @@ public class ThymeleafController {
      */
     @GetMapping( "/abfrage-kfz" )
     public String abfrageKfzKennzeichen( Model model,
-                                         @RequestParam(value = "feld_1", required = true) String feld1,
-                                         @RequestParam(value = "feld_2", required = true) String feld2,
-                                         @RequestParam(value = "feld_3", required = true) int    feld3 ) {        
+                                         @RequestParam( value = "feld_1", required = true ) String feld1,
+                                         @RequestParam( value = "feld_2", required = true ) String feld2,
+                                         @RequestParam( value = "feld_3", required = true ) int    feld3 ) {        
         final String kfzKennzeichen = 
                         String.format( "%s %s %d", 
                                        feld1.trim().toUpperCase(), // Frontend sollte keine Leerzeichen durchlassen
