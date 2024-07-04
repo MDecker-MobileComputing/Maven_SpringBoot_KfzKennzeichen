@@ -20,33 +20,33 @@ import de.eldecker.dhbw.spring.db.entities.KfzKennzeichenEntity;
 
 
 /**
- * REST-Controller, um externe Anfragen (z.B. von anderen Microservices) 
+ * REST-Controller, um externe Anfragen (z.B. von anderen Microservices)
  * zu beantworten.
  */
 @RestController
 @RequestMapping( "/api/v1" )
 public class ExternRestController {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger( ExternRestController.class );
-    
+
     /** Bean für Zugriff auf Datenbanktabelle mit KFZ-Kennzeichen. */
     @Autowired
     private KfzKennzeichenRepo _kfzKennzeichenRepo;
-    
+
 
     /**
      * REST-Methode für Endpunkt, um Infos zu KFZ-Kennzeichen abzufragen.
      * <br><br>
-     * 
+     *
      * Beispiel-URL für Abfrage KFZ-Kennzeichen "BAD E 1234:
      * <pre>
      * http://localhost:8080/api/v1/abfrage/BAD%20E%201234
      * </pre><br>
      * Die Leerzeichen müssen mit {@code %20} kodiert werden.
-     *  
+     *
      * @param kennzeichen KFZ-Kennzeichen, für das Informationen zurückgeliefert
      *                    werden sollen
-     * 
+     *
      * @return Wenn gefunden, dann serialisiertes Objekt und HTTP-Status-Code 200 (OK),
      *         wenn nicht gefunden, dann HTTP-Status-Code 404 (Not Found); mit 50%
      *         Wahrscheinlichkeit treten allerdings interne Fehler auf (um Fehler-Handling
@@ -54,34 +54,34 @@ public class ExternRestController {
      */
     @GetMapping( "/abfrage/{kennzeichen}" )
     public ResponseEntity<KfzKennzeichenEntity> kennzeichenAbfragen ( @PathVariable String kennzeichen )
-                               throws Exception {                                                                                                                           
-        
+                               throws Exception {
+
         kennzeichen = kennzeichen.trim();
-        
-        LOG.info( "REST-Abfrage für KFZ-Kennzeichen erhalten: {}", kennzeichen );
-        
+
+        LOG.info( "REST-Abfrage für KFZ-Kennzeichen erhalten: \"{}\"", kennzeichen );
+
         if ( Math.random() <= 0.5 ) {
-            
-            LOG.error( "Interner Fehler bei Abfrage von KFZ-Kennzeichen \"{}\".", kennzeichen );
+
+            LOG.error( "Interner Fehler bei Abfrage von KFZ-Kennzeichen \"{}\" (Zufallsentscheidung).", kennzeichen );
             return ResponseEntity.status( INTERNAL_SERVER_ERROR ).body( null );
         }
-        
-        Optional<KfzKennzeichenEntity> kennzeichenOptional = 
+
+        Optional<KfzKennzeichenEntity> kennzeichenOptional =
                             _kfzKennzeichenRepo.findByKennzeichen( kennzeichen );
-        
+
         if ( kennzeichenOptional.isEmpty() ) {
 
            LOG.warn( "Kein KFZ-Kennzeichen \"{}\" gefunden.", kennzeichen );
-           return ResponseEntity.status( NOT_FOUND ).body( null );                                         
-            
+           return ResponseEntity.status( NOT_FOUND ).body( null );
+
         } else {
-            
+
             KfzKennzeichenEntity kfzKennzeichen = kennzeichenOptional.get();
-            
-            LOG.info( "KFZ-Kennzeichen gefunden: {}", kfzKennzeichen );  
+
+            LOG.info( "KFZ-Kennzeichen gefunden: {}", kfzKennzeichen );
             return ResponseEntity.status( OK )
                                  .body( kfzKennzeichen );
         }
     }
-    
+
 }
