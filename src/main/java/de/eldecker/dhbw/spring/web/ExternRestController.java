@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.eldecker.dhbw.spring.db.KfzKennzeichenRepo;
 import de.eldecker.dhbw.spring.db.entities.KfzKennzeichenEntity;
+import jakarta.annotation.PostConstruct;
 
 
 /**
@@ -32,6 +34,21 @@ public class ExternRestController {
     /** Bean für Zugriff auf Datenbanktabelle mit KFZ-Kennzeichen. */
     @Autowired
     private KfzKennzeichenRepo _kfzKennzeichenRepo;
+
+    /** Konfiguration, ob REST-Endpunkt sporadische Fehler zurückliefern soll. */
+    @Value( "${de.eldecker.kfz-kennzeichen.rest.sporadischefehler:false}" )
+    private boolean _sporadischeFehler;
+
+    /**
+     * Methode schreibt auf Logger, ob sporadische Fehler bei REST-Abfragen
+     * laut Konfiguration erzeugt werden sollen.
+     */
+    @PostConstruct
+    public void nachKonstruktor() {
+
+        LOG.info( "Erzeugung sporadische Fehler bei REST-Abfragen: {}",
+                          _sporadischeFehler );
+    }
 
 
     /**
@@ -60,7 +77,7 @@ public class ExternRestController {
 
         LOG.info( "REST-Abfrage für KFZ-Kennzeichen erhalten: \"{}\"", kennzeichen );
 
-        if ( Math.random() <= 0.5 ) {
+        if ( _sporadischeFehler && Math.random() <= 0.5 ) {
 
             LOG.error( "Interner Fehler bei Abfrage von KFZ-Kennzeichen \"{}\" (Zufallsentscheidung).", kennzeichen );
             return ResponseEntity.status( INTERNAL_SERVER_ERROR ).body( null );
