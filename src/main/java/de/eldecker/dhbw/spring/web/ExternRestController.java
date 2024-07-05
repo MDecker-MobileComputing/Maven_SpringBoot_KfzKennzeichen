@@ -36,6 +36,7 @@ public class ExternRestController {
     @Autowired
     private KfzKennzeichenRepo _kfzKennzeichenRepo;
     
+    /** Leeres Objekt als "Antwort" für Abfragen, wenn KFZ-Kennzeichen nicht gefunden wurde. */ 
     private FahrzeugHalterEntity _fahrzeugHalterLeer = new FahrzeugHalterEntity();
 
     /** Konfiguration, ob REST-Endpunkt sporadische Fehler zurückliefern soll. */
