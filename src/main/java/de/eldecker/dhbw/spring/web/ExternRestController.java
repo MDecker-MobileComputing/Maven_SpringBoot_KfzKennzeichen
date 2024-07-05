@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.eldecker.dhbw.spring.db.KfzKennzeichenRepo;
+import de.eldecker.dhbw.spring.db.entities.FahrzeugHalterEntity;
 import de.eldecker.dhbw.spring.db.entities.KfzKennzeichenEntity;
 import jakarta.annotation.PostConstruct;
 
@@ -34,6 +35,8 @@ public class ExternRestController {
     /** Bean für Zugriff auf Datenbanktabelle mit KFZ-Kennzeichen. */
     @Autowired
     private KfzKennzeichenRepo _kfzKennzeichenRepo;
+    
+    private FahrzeugHalterEntity _fahrzeugHalterLeer = new FahrzeugHalterEntity();
 
     /** Konfiguration, ob REST-Endpunkt sporadische Fehler zurückliefern soll. */
     @Value( "${de.eldecker.kfz-kennzeichen.rest.sporadischefehler:false}" )
@@ -61,8 +64,8 @@ public class ExternRestController {
      * </pre><br>
      * Die Leerzeichen müssen mit {@code %20} kodiert werden.
      *
-     * @param kennzeichen KFZ-Kennzeichen, für das Informationen zurückgeliefert
-     *                    werden sollen
+     * @param kennzeichen KFZ-Kennzeichen, für das die Halterinformationen zurückgegeben
+     *                    werden sollen.
      *
      * @return Wenn gefunden, dann serialisiertes Objekt und HTTP-Status-Code 200 (OK),
      *         wenn nicht gefunden, dann HTTP-Status-Code 404 (Not Found); mit 50%
@@ -70,7 +73,7 @@ public class ExternRestController {
      *         beim Client zu testen).
      */
     @GetMapping( "/abfrage/{kennzeichen}" )
-    public ResponseEntity<KfzKennzeichenEntity> kennzeichenAbfragen ( @PathVariable String kennzeichen )
+    public ResponseEntity<FahrzeugHalterEntity> kennzeichenAbfragen ( @PathVariable String kennzeichen )
                                throws Exception {
 
         kennzeichen = kennzeichen.trim();
@@ -79,7 +82,8 @@ public class ExternRestController {
 
         if ( _sporadischeFehler && Math.random() <= 0.5 ) {
 
-            LOG.error( "Interner Fehler bei Abfrage von KFZ-Kennzeichen \"{}\" (Zufallsentscheidung).", kennzeichen );
+            LOG.error( "Interner Fehler bei Abfrage von KFZ-Kennzeichen \"{}\" (Zufallsentscheidung).", 
+                       kennzeichen );
             return ResponseEntity.status( INTERNAL_SERVER_ERROR ).body( null );
         }
 
@@ -89,15 +93,16 @@ public class ExternRestController {
         if ( kennzeichenOptional.isEmpty() ) {
 
            LOG.warn( "Kein KFZ-Kennzeichen \"{}\" gefunden.", kennzeichen );
-           return ResponseEntity.status( NOT_FOUND ).body( null );
+           return ResponseEntity.status( NOT_FOUND ).body( _fahrzeugHalterLeer );
 
         } else {
 
             KfzKennzeichenEntity kfzKennzeichen = kennzeichenOptional.get();
+            FahrzeugHalterEntity fahrzeugHalterDaten = kfzKennzeichen.getFahrzeugHalter();
 
             LOG.info( "KFZ-Kennzeichen gefunden: {}", kfzKennzeichen );
             return ResponseEntity.status( OK )
-                                 .body( kfzKennzeichen );
+                                 .body( fahrzeugHalterDaten );
         }
     }
 
