@@ -78,7 +78,6 @@ public class ExternRestController {
                                throws Exception {
 
         kennzeichen = kennzeichen.trim();
-
         LOG.info( "REST-Abfrage für KFZ-Kennzeichen erhalten: \"{}\"", kennzeichen );
 
         if ( _sporadischeFehler && Math.random() <= 0.5 ) {
