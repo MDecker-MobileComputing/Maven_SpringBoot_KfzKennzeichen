@@ -43,6 +43,7 @@ public class ExternRestController {
     @Value( "${de.eldecker.kfz-kennzeichen.rest.sporadischefehler:false}" )
     private boolean _sporadischeFehler;
 
+    
     /**
      * Methode schreibt auf Logger, ob sporadische Fehler bei REST-Abfragen
      * laut Konfiguration erzeugt werden sollen.
@@ -51,7 +52,7 @@ public class ExternRestController {
     public void nachKonstruktor() {
 
         LOG.info( "Erzeugung sporadische Fehler bei REST-Abfragen: {}",
-                          _sporadischeFehler );
+                  _sporadischeFehler );
     }
 
 
@@ -97,7 +98,7 @@ public class ExternRestController {
 
         } else {
 
-            KfzKennzeichenEntity kfzKennzeichen = kennzeichenOptional.get();
+            KfzKennzeichenEntity kfzKennzeichen      = kennzeichenOptional.get();
             FahrzeugHalterEntity fahrzeugHalterDaten = kfzKennzeichen.getFahrzeugHalter();
 
             LOG.info( "KFZ-Kennzeichen gefunden: {}", kfzKennzeichen );
