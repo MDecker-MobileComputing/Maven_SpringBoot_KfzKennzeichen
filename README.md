@@ -6,7 +6,7 @@ Dieses Repo enthält ein Maven-Projekt für eine mit *Spring Boot* implementiert
 folgende Konzepte von *Spring Data JPA* demonstriert werden sollen:
 * `@OneToOne`-Mappings
 * Enum-Attribute auf Spalten in Datenbanktabellen abbilden
-* Bean Validation
+* Bean Validation (inkl. Custom Annotation)
 
 <br>
 
